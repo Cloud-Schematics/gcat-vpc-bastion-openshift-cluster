@@ -60,7 +60,7 @@ variable classic_access {
 
 variable subnet_tiers {
   description = "List of subnets tiers for the vpc."
-  /* type        = list(
+  type        = list(
     object({
       name     = string
       acl_name = string
@@ -72,23 +72,23 @@ variable subnet_tiers {
             public_gateway = optional(bool)
           })
         )
-        zone-2 = list(
+        zone-2 = optional(list(
           object({
             name           = string
             cidr           = string
             public_gateway = optional(bool)
           })
-        )
-        zone-3 = list(
+        ))
+        zone-3 = optional(list(
           object({
             name           = string
             cidr           = string
             public_gateway = optional(bool)
           })
-        )
+        ))
       })
     })
-  )*/
+  )
   default = [
     {
       name     = "vpc"
@@ -128,23 +128,9 @@ variable subnet_tiers {
             public_gateway = false
           }
         ]
-        zone-2 = []
-        zone-3 = []
       }
     }
   ]
-
-  validation {
-      error_message = "Keys for `subnets` objects in each tier must be in the order `zone-1`, `zone-2`, `zone-3`."
-      condition     = length(
-        distinct(
-          flatten([
-            for tier in var.subnet_tiers:
-            false if keys(tier.subnets)[0] != "zone-1" || keys(tier.subnets)[1] != "zone-2" || keys(tier.subnets)[2] != "zone-3"
-          ])
-        )
-      ) == 0
-  }
 
   validation {
     error_message = "Each tier must have a unique name."

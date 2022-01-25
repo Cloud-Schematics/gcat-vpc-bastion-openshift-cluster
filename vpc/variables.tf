@@ -40,7 +40,7 @@ variable classic_access {
 
 variable subnet_tiers {
   description = "List of subnets tiers for the vpc."
-  /* type        = list(
+  type        = list(
     object({
       name     = string
       acl_name = string
@@ -52,23 +52,23 @@ variable subnet_tiers {
             public_gateway = optional(bool)
           })
         )
-        zone-2 = list(
+        zone-2 = optional(list(
           object({
             name           = string
             cidr           = string
             public_gateway = optional(bool)
           })
-        )
-        zone-3 = list(
+        ))
+        zone-3 = optional(list(
           object({
             name           = string
             cidr           = string
             public_gateway = optional(bool)
           })
-        )
+        ))
       })
     })
-  )*/
+  )
   default = [
     {
       name     = "vpc"

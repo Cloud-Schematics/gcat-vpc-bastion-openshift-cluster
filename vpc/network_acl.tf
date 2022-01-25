@@ -21,7 +21,7 @@ locals {
             for tier in var.subnet_tiers:
             tier.name => flatten([
                   # For each subnet in a list of all subnets in that tier
-                  for subnet in flatten([ for zone in keys(tier.subnets): tier.subnets[zone] ]):
+                  for subnet in (tier == null ? flatten([ for zone in keys(tier.subnets): tier.subnets[zone] ]) : []) :
                   [
                         { 
                               name        = "allow-inbound-${var.prefix}-${tier.name}-${subnet.name}"

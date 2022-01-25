@@ -102,7 +102,7 @@ locals {
       for tier in var.subnet_tiers:
       [
         # For each subnet in each tier
-        for subnet in tier.subnets[zone]:
+        for subnet in (tier.subnets[zone] == null ? [] : tier.subnets[zone]):
         # Merge together a new object from the existing fields
         # but with a new name and an ACL ID 
         merge(
@@ -117,7 +117,7 @@ locals {
             acl_id = ibm_is_network_acl.multitier_acl[tier.acl_name].id
           }
         )
-      ]
+      ] //if contains(keys(tier), zone)
     ])
   }
 }
