@@ -70,6 +70,14 @@ resource ibm_resource_instance cos {
 # Create ROKS Cluster
 ##############################################################################
 
+data ibm_container_cluster_versions cluster_versions {
+  region = var.region
+}
+
+locals {
+  latest = "${data.ibm_container_cluster_versions.cluster_versions.valid_openshift_versions[length(data.ibm_container_cluster_versions.cluster_versions.valid_openshift_versions) - 1]}_openshift"
+}
+
 module roks_cluster {
   source            = "./cluster"
   # Account Variables
@@ -83,7 +91,7 @@ module roks_cluster {
   machine_type      = var.machine_type
   workers_per_zone  = var.workers_per_zone
   entitlement       = var.entitlement
-  kube_version      = var.kube_version
+  kube_version      = local.latest
   tags              = var.tags
   worker_pools      = var.worker_pools
   cos_id            = ibm_resource_instance.cos.id

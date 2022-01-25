@@ -204,15 +204,15 @@ variable network_acls {
       add_cluster_rules   = true
       rules               = [
         {
-          name        = "deny-all-inbound"
-          action      = "deny"
+          name        = "allow-all-inbound"
+          action      = "allow"
           direction   = "inbound"
           destination = "0.0.0.0/0"
           source      = "0.0.0.0/0"
         },
         {
-          name        = "deny-all-outbound"
-          action      = "deny"
+          name        = "allow-all-outbound"
+          action      = "allow"
           direction   = "outbound"
           destination = "0.0.0.0/0"
           source      = "0.0.0.0/0"
@@ -224,7 +224,7 @@ variable network_acls {
       network_connections = ["vpc"] 
       rules               = [
         {
-          name        = "allow-all-inbound"
+          name        = "deny-all-inbound"
           action      = "allow"
           direction   = "inbound"
           destination = "0.0.0.0/0"
@@ -326,23 +326,6 @@ variable security_group_rules {
   )
 
   default = [
-    {
-      name      = "allow-inbound-ping"
-      direction = "inbound"
-      remote    = "0.0.0.0/0"
-      icmp      = {
-        type = 8
-      }
-    },
-    {
-      name      = "allow-inbound-ssh"
-      direction = "inbound"
-      remote    = "0.0.0.0/0"
-      tcp       = {
-        port_min = 22
-        port_max = 22
-      }
-    },
   ]
 
   validation {
@@ -469,18 +452,7 @@ variable worker_pools {
         workers_per_zone = number
     }))
 
-    default     = [
-      {
-        name             = "dev"
-        machine_type     = "cx2.8x16"
-        workers_per_zone = 2
-      },
-      {
-        name             = "test"
-        machine_type     = "mx2.4x32"
-        workers_per_zone = 2
-      }
-    ]
+    default     = []
 
     validation  {
         error_message = "Worker pool names must match the regex `^([a-z]|[a-z][-a-z0-9]*[a-z0-9])$`."
